@@ -7,51 +7,36 @@ using System;
 using System.Diagnostics;   
 using System.Linq;
 using System.Threading.Tasks;
-using ShopApp.Data;
+using Data;
+using Services;
 
 namespace ShopApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private ApplicationDbContext _context { get; set; }
-        public object Category { get; private set; }
+        private ProductService _productService;
+        private CategoryService _categoryService;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext applicationDbContext)
         {
+            _productService = new ProductService(applicationDbContext);
             _logger = logger;
-            _context = applicationDbContext;
+            _categoryService = new CategoryService(applicationDbContext);
         }
 
-        public IActionResult Index(int? id,string SearchTerm)
+        public IActionResult Index(int? id, string SearchTerm, int? SortBy)
         {
-            var prolist = _context.Products.AsQueryable();
-            prolist = id.HasValue ?
-                _context.Products.Where(x => x.CategoryId ==id) :
-                _context.Products;
-            if (!string.IsNullOrEmpty(SearchTerm))
+            ProductWithCategoryVM vm = new ProductWithCategoryVM()
             {
-                prolist = prolist.Where(p => p.Name.Contains(SearchTerm));
-            }
-            ProductWithCategoryVM vm = new()
-            {
-                Categories = _context.Categories.ToList(),
-                Products = prolist.ToList(),
+                Categories = _categoryService.GetCategories(),
+                Products = _productService.SearchProductFilter(id, SearchTerm, SortBy),
                 SearchTerm = SearchTerm,
-                CategoryId = id.Value,
+                CategoryId = id,
+                SortBy = SortBy,
             };
             return View(vm);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Products";
+}
+
+@model ProductWithCategoryVM
+
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-3">
+        <form method="get" id="SearchTerm">
+            <input type="text" name="SearchTerm" value="@Model.SearchTerm" />
+            <input type="submit" name="name" value="Search" />
+        </form>
+        <ul class="list-group">
+            <li class="list-group-item @(Model.CategoryId==null?"active":"")"><a href="/Products">All product</a></li>
+            @foreach (var cat in Model.Categories)
+            {
+                <li class="list-group-item @(Model.CategoryId==cat.Id?"active":"")"><a href="@Url.Action("Index","Products",new {id=cat.Id,SortBy=Model.SortBy,SearchTerm=Model.SearchTerm })">@cat.Name</a></li>
+            }
+        </ul>
+
+        <ul class="list-group list-unstyled my-3">
+            <li class="list-group-item"><a class="list-group-item" href="@Url.Action("Index","Products",new {SortBy=Convert.ToInt32(ProductFilter.PriceLowToHigh) })">Price High to Low</a></li>
+            <li class="list-group-item"><a class="list-group-item" href="@Url.Action("Index","Products",new {SortBy=Convert.ToInt32(ProductFilter.PriceHighToLow) })">Price Low to High</a></li>
+            <li class="list-group-item"><a class="list-group-item" href="@Url.Action("Index","Products",new {SortBy=Convert.ToInt32(ProductFilter.Default) })">Default</a></li>
+            <li class="list-group-item"><a class="list-group-item" href="/Products">Latest </a></li>
+
+        </ul>
+    </div>
+    <div class="col-lg-9">
+        @if (Model.Products.Count > 0)
+        {
+            <div class="row">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="card col-lg-4">
+                        <img src="~/images/@item.PictureUrl" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name - @item.Price</h5>
+                            <p class="card-text">@item.Description</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <span class="alert-danger">Product not found</span>
+        }
+    </div>
+</div>

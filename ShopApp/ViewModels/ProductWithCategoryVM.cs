@@ -1,4 +1,5 @@
-﻿using ShopApp.Models;
+﻿using Entities;
+using ShopApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace ShopApp.ViewModels
         public List<Product> Products { get; set; }
         public string SearchTerm { get; set; }
         public int? CategoryId { get; set; }
+        public int? SortBy { get; set; }
     }
 }

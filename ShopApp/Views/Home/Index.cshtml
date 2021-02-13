@@ -2,48 +2,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model ProductWithCategoryVM
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
 
 
 
-<div class="row">
-    <div class="col-lg-3">
-        <form method="get" id="SearchTerm">
-            <input type="text" name="SearchTerm" value="@Model.SearchTerm" />
-            <input type="submit" name="name" value="Search" />
-        </form>
-        <ul class="list-group">
-            <li class="list-group-item @(Model.CategoryId==null?"active":"")"><a href="/">All product</a></li>
-            @foreach (var cat in Model.Categories)
-            {
-                <li class="list-group-item @(Model.CategoryId==cat.Id?"active":"")"><a href="/Home/Index/@cat.Id?SearchTerm=@Model.SearchTerm">@cat.Name</a></li>
-            }
-        </ul>
-    </div>
-    <div class="col-lg-9">
-        @if (Model.Products.Count > 0)
-        {
-            <div class="row">
-                @foreach (var item in Model.Products)
-                {
-                    <div class="card col-lg-4">
-                        <img src="https://cdn.yeniakit.com.tr/images/album/en-ilginc-resimler6.jpg" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">@item.Name - @item.Price</h5>
-                            <p class="card-text">@item.Description</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else { 
-            <span class="alert-danger">Product not found</span>
-        }
-    </div>
-</div>

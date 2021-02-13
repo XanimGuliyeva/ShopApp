@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.Areas.Dashboard.ViewModel;
-using ShopApp.Data;
+using Data;
 using ShopApp.Models;
+using Entities;
 
 namespace ShopApp.Areas.Dashboard.Controllers
 {
@@ -19,9 +20,8 @@ namespace ShopApp.Areas.Dashboard.Controllers
     {
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly ApplicationDbContext _context;
-        private Stream fileStream;
 
-        public IFormFile PictureUrl { get; private set; }
+
 
         public ProductsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
@@ -65,9 +65,9 @@ namespace ShopApp.Areas.Dashboard.Controllers
             if (PictureUrl != null)
             {
                 string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + PictureUrl.Name;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + PictureUrl.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create)) ;
+                using var fileStream = new FileStream(filePath, FileMode.Create);
                 PictureUrl.CopyTo(fileStream);
             }
             return uniqueFileName;
@@ -89,7 +89,7 @@ namespace ShopApp.Areas.Dashboard.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = UploadedFile(PictureUrl);
+                string uniqueFileName = UploadedFile(model.PictureUrl);
                 Product pro = new()
                 {
                     Name = model.Name,

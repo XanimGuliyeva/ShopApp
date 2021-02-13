@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShopApp.Models.Product>
+﻿@model IEnumerable<Entities.Product>
 
 @{
     ViewData["Title"] = "Index";
@@ -49,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PictureUrl)
+                <img src="~/images/@item.PictureUrl" alt="Alternate Text" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
